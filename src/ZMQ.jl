@@ -6,7 +6,6 @@ import Libdl
 using Base.Libc: EAGAIN
 using FileWatching: UV_READABLE, uv_pollcb, _FDWatcher
 import Sockets
-using Sockets: connect, bind, send, recv
 import Base.GC: @preserve
 
 const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
@@ -19,11 +18,9 @@ export
     #Types
     StateError,Context,Socket,Message,
     #functions
-    set, subscribe, unsubscribe,
+    set, subscribe, unsubscribe, connect, bind, send, recv,
     #Constants
-    IO_THREADS,MAX_SOCKETS,PAIR,PUB,SUB,REQ,REP,ROUTER,DEALER,PULL,PUSH,XPUB,XSUB,XREQ,XREP,UPSTREAM,DOWNSTREAM,MORE,POLLIN,POLLOUT,POLLERR,STREAMER,FORWARDER,QUEUE,SNDMORE,
-    #Sockets
-    connect, bind, send, recv
+    IO_THREADS,MAX_SOCKETS,PAIR,PUB,SUB,REQ,REP,ROUTER,DEALER,PULL,PUSH,XPUB,XSUB,XREQ,XREP,UPSTREAM,DOWNSTREAM,MORE,POLLIN,POLLOUT,POLLERR,STREAMER,FORWARDER,QUEUE,SNDMORE
 
 
 include("constants.jl")

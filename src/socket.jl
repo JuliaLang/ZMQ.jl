@@ -44,16 +44,25 @@ end
 Base.wait(socket::Socket) = wait(getfield(socket, :pollfd), readable=true, writable=false)
 Base.notify(socket::Socket) = @preserve socket uv_pollcb(getfield(socket, :pollfd).handle, Int32(0), Int32(UV_READABLE))
 
-function Sockets.bind(socket::Socket, endpoint::AbstractString)
+function bind(socket::Socket, endpoint::AbstractString)
     rc = ccall((:zmq_bind, libzmq), Cint, (Ptr{Cvoid}, Ptr{UInt8}), socket, endpoint)
+    if rc != 0
+        throw(StateError(jl_zmq_error_str()))
+    end
+end
+function Sockets.bind(socket::Socket, endpoint::AbstractString)
+    depwarn("Sockets.bind(socket::Socket, endpoint::AbstractString) is deprecated, use bind(socket::Socket, endpoint::AbstractString) insead.", nothing)
+    bind(socket, endpoint)
+end
+
+function connect(socket::Socket, endpoint::AbstractString)
+    rc=ccall((:zmq_connect, libzmq), Cint, (Ptr{Cvoid}, Ptr{UInt8}), socket, endpoint)
     if rc != 0
         throw(StateError(jl_zmq_error_str()))
     end
 end
 
 function Sockets.connect(socket::Socket, endpoint::AbstractString)
-    rc=ccall((:zmq_connect, libzmq), Cint, (Ptr{Cvoid}, Ptr{UInt8}), socket, endpoint)
-    if rc != 0
-        throw(StateError(jl_zmq_error_str()))
-    end
+    depwarn("Sockets.connect(socket::Socket, endpoint::AbstractString) is deprecated, use connect(socket::Socket, endpoint::AbstractString) insead.", nothing)
+    connect(socket, endpoint)
 end
